@@ -4,6 +4,10 @@ Shows your Claude Pro/Max plan limits (the same numbers as `/usage` in Claude Co
 M5Stack Core. It shows the 5-hour session limit, the weekly limit for all models, and the
 weekly Opus and Sonnet limits when your plan has them.
 
+<p align="center">
+  <img src="m5.jpg" alt="M5Stack Core showing Claude Pro usage: Session (5h) 52%, Weekly (all models) 65%" width="600">
+</p>
+
 A small Python bridge on your PC reads your Claude Code login, asks Anthropic for your usage,
 and serves it as JSON on your local network. The M5Stack fetches that JSON over Wi-Fi and draws it.
 
@@ -200,3 +204,10 @@ Other clients on your network, such as scripts or other displays, can use the sa
   - Some guest or "client isolation" Wi-Fi networks block device-to-device traffic.
 - **The details page shows `--`:** your plan has no separate Opus or Sonnet weekly limit.
 - **Numbers never update:** open `claude` once so the token gets refreshed.
+
+## License
+
+[MIT](LICENSE) © 2026 Laboratory of Things.
+
+This is an unofficial hobby project. It isn't affiliated with or endorsed by Anthropic or
+M5Stack. "Claude" is a trademark of Anthropic.

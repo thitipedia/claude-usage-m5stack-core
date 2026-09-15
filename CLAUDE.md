@@ -92,7 +92,7 @@ Keep `err` under ~22 chars — that is all the header fits.
   `utilization` 0–100 and `resets_at` ISO-8601 Z). It may change without notice.
 - **PC side verified live on 2026-09-15** (Pro plan): `five_hour` and `seven_day` came
   back; `seven_day_opus`/`seven_day_sonnet` were null, so the Details page shows `--` on Pro.
-  The device side has not yet been verified on hardware.
+  Device verified on hardware the same day: the main page renders live numbers (photo: `m5.jpg`).
 - **Hidden mode / logging:** under `pythonw.exe`, `sys.stdout` is None, so `setup_logging()`
   writes to `bridge.log` (1 MB, one backup). With a console, it logs to stdout.
 - **One bridge at a time:** `Server.allow_reuse_address` is False on Windows, where
