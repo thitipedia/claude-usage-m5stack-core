@@ -61,10 +61,12 @@ Keep `err` under ~22 chars — that is all the header fits.
 
 ## Device UI
 
-- Main page: Session (5h) and Weekly (all models) cards — big percentage, bar, reset time.
-- Details page: Weekly Opus and Weekly Sonnet.
+- One page: Session (5h) and Weekly (all models) cards — big percentage, bar, reset time.
+  `opus`/`sonnet` still arrive in the JSON but are not drawn (the details page was dropped).
 - Bar colour by threshold: green < 50%, amber 50–79%, red >= 80%.
-- BtnA refresh now, BtnB toggle page, BtnC cycle brightness (40/120/255).
+- BtnA refresh now, BtnB screen on/off, BtnC cycle brightness (40/120/255).
+- `set_screen()` blanks the display (`lcd.sleep()` when the build has it, plus brightness 0)
+  and keeps polling; `draw()`/`header()` are skipped while off. BtnC is ignored while off.
 - Poll interval 30 s (`POLL_MS`); on failure the last good numbers stay on screen
   and the header shows "PC not found" / "no Wi-Fi" / `HTTP <code>`.
 - Colours are the dark Claude palette (`BG 0x141413`, `ORANGE 0xD97757`); UIFlow2
@@ -91,8 +93,10 @@ Keep `err` under ~22 chars — that is all the header fits.
   wild: `five_hour`, `seven_day`, `seven_day_opus`, `seven_day_sonnet` (each with
   `utilization` 0–100 and `resets_at` ISO-8601 Z). It may change without notice.
 - **PC side verified live on 2026-09-15** (Pro plan): `five_hour` and `seven_day` came
-  back; `seven_day_opus`/`seven_day_sonnet` were null, so the Details page shows `--` on Pro.
+  back; `seven_day_opus`/`seven_day_sonnet` were null (they are no longer displayed anyway).
   Device verified on hardware the same day: the main page renders live numbers (photo: `m5.jpg`).
+- **Screen toggle not yet tested on hardware** (2026-09-16): `lcd.sleep()`/`wakeup()` may be
+  missing on some UIFlow2 builds, so brightness 0 is the fallback.
 - **Hidden mode / logging:** under `pythonw.exe`, `sys.stdout` is None, so `setup_logging()`
   writes to `bridge.log` (1 MB, one backup). With a console, it logs to stdout.
 - **One bridge at a time:** `Server.allow_reuse_address` is False on Windows, where

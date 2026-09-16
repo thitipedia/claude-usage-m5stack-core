@@ -1,8 +1,7 @@
 # Claude usage on M5Stack Core
 
 Shows your Claude Pro/Max plan limits (the same numbers as `/usage` in Claude Code) on an
-M5Stack Core. It shows the 5-hour session limit, the weekly limit for all models, and the
-weekly Opus and Sonnet limits when your plan has them.
+M5Stack Core: the 5-hour session limit and the weekly limit for all models, on one screen.
 
 <p align="center">
   <img src="m5.jpg" alt="M5Stack Core showing Claude Pro usage: Session (5h) 52%, Weekly (all models) 65%" width="600">
@@ -26,10 +25,9 @@ ever sees rounded percentages and reset times.
 
 ## Features
 
-- **Main page:** Session (5h) and Weekly (all models): percentage, colour bar, time until
+- **One screen:** Session (5h) and Weekly (all models): percentage, colour bar, time until
   reset and the local reset time.
-- **Details page:** Weekly Opus and Weekly Sonnet. These show `--` when your plan has no
-  separate limit, which is normal on Pro.
+- **Screen off:** blank the display with one button while the device keeps updating.
 - **Bar colours:** green below 50%, amber from 50 to 79%, red at 80% and above.
 - **Offline:** the last good numbers stay on screen, and the header shows what's wrong.
 - **Finding the PC:** if the device can't reach the PC, it broadcasts on the LAN and uses
@@ -131,7 +129,7 @@ logs `cannot listen on port 8765` and exits.
 | Button | Action |
 | --- | --- |
 | **A** (left) | Refresh now |
-| **B** (middle) | Switch between the main and details pages |
+| **B** (middle) | Turn the screen off and on (it keeps polling while off) |
 | **C** (right) | Cycle brightness (40 / 120 / 255) |
 
 The device polls every 30 seconds and the bridge refreshes from Anthropic every 60 seconds,

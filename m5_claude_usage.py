@@ -4,7 +4,7 @@
 # If the PC can't be reached, the device broadcasts on the LAN to find a bridge
 # (the same PC at a new IP, or another PC) and remembers the one that answers.
 #
-#   BtnA = refresh now   BtnB = details page   BtnC = brightness
+#   BtnA = refresh now   BtnB = screen on/off   BtnC = brightness
 import M5
 from M5 import *
 import network
@@ -43,7 +43,7 @@ RED = 0xE5534B
 lcd = M5.Lcd
 data = None
 err = "connecting..."
-page = 0
+screen_on = True
 bright_levels = [40, 120, 255]
 bright_i = 1
 
@@ -105,7 +105,7 @@ def header():
 
 def footer():
     lcd.fillRect(0, H - 20, W, 20, BG)
-    for x, label in ((68, "Refresh"), (160, "Details" if page == 0 else "Back"), (252, "Light")):
+    for x, label in ((68, "Refresh"), (160, "Screen"), (252, "Light")):
         text(label, x, H - 16, 12, MUTED, BG, "center")
 
 
@@ -113,13 +113,22 @@ def draw():
     lcd.fillScreen(BG)
     header()
     d = data or {}
-    if page == 0:
-        card(38, 86, "Session (5h)", d.get("session"))
-        card(130, 86, "Weekly (all models)", d.get("weekly"))
-    else:
-        card(38, 86, "Weekly Opus", d.get("opus"))
-        card(130, 86, "Weekly Sonnet", d.get("sonnet"))
+    card(38, 86, "Session (5h)", d.get("session"))
+    card(130, 86, "Weekly (all models)", d.get("weekly"))
     footer()
+
+
+def set_screen(on):
+    """BtnB blanks the display; polling keeps running in the background."""
+    global screen_on
+    screen_on = on
+    try:  # not every UIFlow2 build exposes sleep()/wakeup()
+        lcd.wakeup() if on else lcd.sleep()
+    except Exception:
+        pass
+    lcd.setBrightness(bright_levels[bright_i] if on else 0)
+    if on:
+        draw()
 
 
 def wifi_up():
@@ -166,7 +175,8 @@ def discover():
     """Broadcast on the LAN; the first bridge that answers becomes the host."""
     global host, err
     err = "finding PC..."
-    header()
+    if screen_on:
+        header()
     ip, mask = network.WLAN(network.STA_IF).ifconfig()[:2]
     a = [int(x) for x in ip.split(".")]
     m = [int(x) for x in mask.split(".")]
@@ -243,16 +253,17 @@ while True:
     M5.update()
     if BtnA.wasPressed():
         err = "refreshing..."
-        header()
+        if screen_on:
+            header()
         last = -POLL_MS
     if BtnB.wasPressed():
-        page ^= 1
-        draw()
-    if BtnC.wasPressed():
+        set_screen(not screen_on)
+    if BtnC.wasPressed() and screen_on:
         bright_i = (bright_i + 1) % len(bright_levels)
         lcd.setBrightness(bright_levels[bright_i])
     if time.ticks_diff(time.ticks_ms(), last) >= POLL_MS:
         last = time.ticks_ms()
         fetch()
-        draw()
+        if screen_on:
+            draw()
     time.sleep_ms(30)
